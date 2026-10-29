@@ -1,0 +1,24 @@
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Frontend
+node_modules/
+dist/
+
+# Logs
+*.log
+# Local backend environment
+backend/venv/
+backend/.venv/
+
+# Local screening uploads and generated images
+backend/storage/

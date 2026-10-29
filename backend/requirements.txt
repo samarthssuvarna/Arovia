@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+psycopg[binary]
+pyjwt
+bcrypt
+python-dotenv
+python-multipart
+pillow
+numpy
+torch
+torchvision
