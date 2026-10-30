@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { api, fmtDate } from '../api.js'
+import ConfirmDialog from './ConfirmDialog.jsx'
+import { useToast } from './Toast.jsx'
 
 export default function PatientConsents() {
   const [rows, setRows] = useState([])
@@ -9,6 +11,8 @@ export default function PatientConsents() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
+  const [removing, setRemoving] = useState(null)
+  const toast = useToast()
 
   const load = useCallback(async () => {
     try {
@@ -40,15 +44,19 @@ export default function PatientConsents() {
     }
   }
 
-  async function revoke(id) {
+  // Critical: the patient confirms first, then it happens at once.
+  async function revoke() {
     setError('')
-    setNotice('')
+    setBusy(true)
     try {
-      await api(`/portal/consents/${id}/revoke`, { method: 'POST' })
-      setNotice('Access removed. The doctor can no longer open your record.')
+      await api(`/portal/consents/${removing.consent_id}/revoke`, { method: 'POST' })
+      toast.show(`Access removed for ${removing.provider}`)
       await load()
     } catch (err) {
       setError(err.message)
+    } finally {
+      setBusy(false)
+      setRemoving(null)
     }
   }
 
@@ -112,10 +120,12 @@ export default function PatientConsents() {
                   <td>{r.facility}</td>
                   <td>{fmtDate(r.granted_on)}</td>
                   <td>{fmtDate(r.expires_on)}</td>
-                  <td><span className={`badge ${r.effective_status}`}>{r.effective_status}</span></td>
+                  <td>
+                    <span className={`badge ${r.effective_status}`}>{r.effective_status}</span>
+                  </td>
                   <td>
                     {r.effective_status === 'active' && (
-                      <button className="small danger" onClick={() => revoke(r.consent_id)}>Remove access</button>
+                      <button className="small danger" onClick={() => setRemoving(r)}>Remove access</button>
                     )}
                   </td>
                 </tr>
@@ -124,6 +134,18 @@ export default function PatientConsents() {
           </table>
         )}
       </div>
+
+      {removing && (
+        <ConfirmDialog
+          title={`Remove ${removing.provider}'s access?`}
+          message="They will not be able to open your record straight away. You can give access again later."
+          confirmText="Remove access"
+          danger
+          busy={busy}
+          onConfirm={revoke}
+          onCancel={() => !busy && setRemoving(null)}
+        />
+      )}
     </>
   )
 }

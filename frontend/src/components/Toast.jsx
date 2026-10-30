@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useRef, useState } from 'react'
 
 const ToastContext = createContext(null)
 
@@ -37,11 +37,16 @@ export function ToastProvider({ children }) {
     setToasts((list) => [...list, { id, message, tone: 'ok', undo: true, cancel }])
     timers.current[id] = setTimeout(() => {
       remove(id)
-      commit()
+      // the real action must always run once the window ends, even if the screen changed
+      Promise.resolve()
+        .then(commit)
+        .catch((err) => {
+          console.error('Undoable action failed', err)
+          onUndo && onUndo()
+          show(`That did not work: ${err.message || 'please try again'}`, 'bad')
+        })
     }, UNDO_MS)
-  }, [remove])
-
-  useEffect(() => () => Object.values(timers.current).forEach(clearTimeout), [])
+  }, [remove, show])
 
   return (
     <ToastContext.Provider value={{ show, undoable }}>

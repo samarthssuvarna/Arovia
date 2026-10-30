@@ -52,7 +52,7 @@ export default function App() {
   return (
     <>
       <div className="topbar">
-        <div className="brand">Patient Record Exchange</div>
+        <img className="logo" src="/arovia-white.png" alt="Arovia" />
         <div className="who">
           <span className={`role-badge ${user.role}`}>{isPatient ? 'Patient' : isAdmin ? 'Admin' : 'Doctor'}</span>
           <span className="who-info">
