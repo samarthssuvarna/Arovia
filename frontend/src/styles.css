@@ -133,6 +133,16 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 button:disabled:hover { background: var(--card); border-color: var(--border); }
 button.primary:disabled:hover { background: var(--accent); border-color: var(--accent); }
 
+/* file picker */
+input[type='file'] { padding: 6px 8px; cursor: pointer; }
+input[type='file']::file-selector-button {
+  font: inherit; font-weight: 700; margin-right: 12px; padding: 7px 14px; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--soft); color: var(--text);
+}
+input[type='file']::file-selector-button:hover { border-color: var(--muted); }
+
+.nw { white-space: nowrap; }
+
 /* ---------- feedback ---------- */
 .alert { padding: 12px 16px; border-radius: var(--radius-sm); font-size: 15px; margin: 14px 0; border-left: 3px solid currentColor; }
 .alert.bad  { background: var(--bad-bg);  color: var(--bad); }

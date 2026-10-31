@@ -90,7 +90,7 @@ export default function Referrals() {
         {summary.length > 0 && (
           <div className="chips" style={{ marginTop: 10 }}>
             {summary.map((s, i) => (
-              <span key={i} className={`badge ${s.status}`}>{s.status} · {s.urgency}: {s.count}</span>
+              <span key={i} className={`badge ${s.status}`}>{s.status}, {s.urgency}: {s.count}</span>
             ))}
           </div>
         )}
@@ -118,9 +118,9 @@ export default function Referrals() {
             <tbody>
               {rows.map((r) => (
                 <tr key={r.referral_id}>
-                  <td>{fmtDate(r.created_at)}</td>
-                  <td>{r.patient}<div className="muted">{r.mrn}</div></td>
-                  <td>{direction === 'incoming' ? r.from_provider : r.to_provider}</td>
+                  <td className="nw">{fmtDate(r.created_at)}</td>
+                  <td className="nw">{r.patient}<div className="muted">{r.mrn}</div></td>
+                  <td className="nw">{direction === 'incoming' ? r.from_provider : r.to_provider}</td>
                   <td>{r.reason}</td>
                   <td><span className={`badge ${r.urgency}`}>{r.urgency}</span></td>
                   <td><span className={`badge ${pending[r.referral_id] || r.status}`}>{pending[r.referral_id] || r.status}</span></td>

@@ -66,7 +66,7 @@ function ResultCard({ s, onSaved }) {
       )}
       {s.flagged_referral_id && (
         <div className="alert info">
-          Referral #{s.flagged_referral_id} to {s.referral_to} ·{' '}
+          Referral #{s.flagged_referral_id} to {s.referral_to}{' '}
           <span className={`badge ${s.referral_urgency}`}>{s.referral_urgency}</span>{' '}
           <span className={`badge ${s.referral_status}`}>{s.referral_status}</span>
         </div>
@@ -80,7 +80,7 @@ function ResultCard({ s, onSaved }) {
         <div style={{ width: 200 }}>
           <label>Doctor's grade</label>
           <select value={grade} onChange={(e) => setGrade(e.target.value)}>
-            {NAMES.map((n, i) => <option key={i} value={i}>{i} · {n}</option>)}
+            {NAMES.map((n, i) => <option key={i} value={i}>Grade {i}: {n}</option>)}
           </select>
         </div>
         <div className="grow">
@@ -92,7 +92,7 @@ function ResultCard({ s, onSaved }) {
         </div>
       </form>
       {s.reviewed_grade != null && (
-        <div className="muted" style={{ marginTop: 6 }}>Doctor reviewed this as grade {s.reviewed_grade} · {NAMES[s.reviewed_grade]}.</div>
+        <div className="muted" style={{ marginTop: 6 }}>Doctor reviewed this as grade {s.reviewed_grade}, {NAMES[s.reviewed_grade]}.</div>
       )}
       {error && <div className="alert bad">{error}</div>}
     </div>
@@ -166,7 +166,7 @@ export default function Screening({ patient }) {
               <label>Demo only: pretend grade</label>
               <select value={simulate} onChange={(e) => setSimulate(e.target.value)}>
                 <option value="">Use model output</option>
-                {NAMES.map((n, i) => <option key={i} value={i}>{i} · {n}</option>)}
+                {NAMES.map((n, i) => <option key={i} value={i}>Grade {i}: {n}</option>)}
               </select>
             </div>
           )}
