@@ -1,4 +1,15 @@
-# Secure Longitudinal Patient Record and Referral Exchange
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="frontend/public/arovia-white.png">
+    <img src="frontend/public/arovia-ink.png" alt="Arovia" width="320">
+  </picture>
+</p>
+
+<p align="center"><strong>Your record. Your permission.</strong></p>
+
+# Arovia: Secure Longitudinal Patient Record and Referral Exchange
+
+*Arovia* combines *Arogya* (Sanskrit for health) and *via* (Latin for path): a patient's path to health, with every step recorded securely and shared only with their consent.
 
 A web platform where authorised doctors see a patient's complete history across hospitals **only with the patient's valid consent**, send tracked referrals to each other, and leave an audit trail for every access, including the refused ones. An AI screening module reads retinal photos for diabetic retinopathy (DR) and refers patients who need a specialist automatically.
 
@@ -26,6 +37,12 @@ A patient's records are scattered across clinics. A doctor seeing them for the f
 - **Doctor:** home dashboard, patient search, consent-gated records, new visits, referrals, eye screening.
 - **Patient:** sees who can view their record, grants or removes access, sees every access attempt.
 - **Admin:** records consent on a patient's behalf (front-desk case), views the full audit log, monitors denied attempts.
+
+## Design and safety in the interface
+
+- **Calm, readable design:** black, white, beige and warm grey, with green, amber and red kept only for consent and risk, so colour always carries meaning. Light and dark themes, and the Atkinson Hyperlegible typeface, which was designed for readability.
+- **Consent made visible:** a doctor sees a bar showing how long the patient's permission lasts. A patient sees the same information about each doctor.
+- **Two safety nets, chosen by risk.** Critical actions (removing a patient's access, rejecting or cancelling a referral, saving a prescription despite an allergy, an admin revoking consent) ask for confirmation, and the confirm button stays locked for 3 seconds. Easy-to-redo actions (accepting or completing a referral) show a 3-second undo bar, and nothing is sent to the server until that window ends.
 
 ## Architecture
 
@@ -55,6 +72,14 @@ React (Vite)  <--REST/JSON-->  FastAPI  <--SQL-->  PostgreSQL
 | Hardest cases | mild, severe and proliferative grades are rarer in the data and less reliable |
 
 **Limits, stated plainly.** The best training epoch was chosen on the same validation set, so the figures are slightly optimistic. The model was trained on one public dataset and has not been tested on images from real hospitals or different cameras. It assists a doctor, who always confirms the grade. It is not a diagnostic device. The training notebook is in `colab/train_dr_model.ipynb`.
+
+## Testing
+
+`tests/Arovia_API_tests.postman_collection.json` holds 28 requests with 51 automatic checks. Import it into Postman, start the backend, and use **Run collection**. The last run passed all 51 checks (0 failed).
+
+It covers: login for all three roles; wrong-password refusal; patient and doctor tokens rejected on each other's endpoints; consent granted, then removed, with the doctor refused on the very next request and the refused attempt visible in the patient's log; allergy conflicts blocked; referral creation, cancellation and an invalid state change refused; the audit log being admin-only; and the real trained model being loaded.
+
+Automated unit tests and testing with real-world images are listed under the roadmap.
 
 ## Running it on Windows (no Docker)
 
@@ -102,6 +127,7 @@ React (Vite)  <--REST/JSON-->  FastAPI  <--SQL-->  PostgreSQL
 1. Hospital-system integration using the HL7 FHIR standard.
 2. Real patient identity (phone OTP or national health ID) instead of demo passwords.
 3. Validate the DR model on local hospital images and add more eye-disease classes.
-4. Login rate limiting, two-factor login for doctors, and encryption of stored images.
+4. Move the login attempt limit (5 failures in 15 minutes, currently kept in memory, so it resets when the server restarts) to a shared store, add two-factor login for doctors, and encrypt stored images.
 5. Compliance mapping to India's DPDP Act and ABDM guidelines before any real data is used.
 6. Mobile-friendly patient app and SMS alerts for urgent referrals.
+7. Automated unit tests and a continuous-integration run on every push.
