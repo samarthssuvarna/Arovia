@@ -15,6 +15,8 @@ A web platform where authorised doctors see a patient's complete history across 
 
 > **Synthetic data only.** Every patient, doctor and image in this project is fictional or from a public research dataset. It is a research and teaching prototype, not a medical device.
 
+**Live demo:** https://arovia-pi.vercel.app (free hosting; the first request after idle can take about a minute while the backend wakes up. Demo accounts are on the sign-in page. Synthetic data only.)
+
 ---
 
 ## The problem
@@ -80,6 +82,18 @@ React (Vite)  <--REST/JSON-->  FastAPI  <--SQL-->  PostgreSQL
 It covers: login for all three roles; wrong-password refusal; patient and doctor tokens rejected on each other's endpoints; consent granted, then removed, with the doctor refused on the very next request and the refused attempt visible in the patient's log; allergy conflicts blocked; referral creation, cancellation and an invalid state change refused; the audit log being admin-only; and the real trained model being loaded.
 
 Automated unit tests and testing with real-world images are listed under the roadmap.
+
+## Online deployment (free tier)
+
+| Part | Service | Notes |
+|---|---|---|
+| Database (PostgreSQL) | Neon | Schema from `neon_schema.sql`, then the seed data and `step2_patient_login.sql` |
+| Backend (FastAPI) | Render | Created from `render.yaml`; env vars `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `ALLOW_ORIGINS`; SSL to the database is on |
+| Frontend (React + Vite) | Vercel | Root folder `frontend`; env var `VITE_API` points to the Render address |
+
+`ALLOW_ORIGINS` on the backend lists the frontend address, so only our own site can call the API from a browser. No passwords are stored in the repo; they are typed into each service's settings page.
+
+Free-tier limits: the backend sleeps after 15 minutes idle (about 50 seconds to wake), the database suspends after 5 minutes idle, and uploaded screening images are lost when the backend restarts. The local Windows setup below is the full-featured backup.
 
 ## Running it on Windows (no Docker)
 
