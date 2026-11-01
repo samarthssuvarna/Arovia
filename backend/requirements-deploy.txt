@@ -1,0 +1,13 @@
+# Used by cloud hosting: CPU-only PyTorch is much smaller and needs less memory.
+--extra-index-url https://download.pytorch.org/whl/cpu
+fastapi
+uvicorn[standard]
+psycopg[binary]
+pyjwt
+bcrypt
+python-dotenv
+python-multipart
+pillow
+numpy
+torch
+torchvision

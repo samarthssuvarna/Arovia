@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .config import EXTRA_ORIGINS
 from .routers import audit, auth, consents, dashboard, encounters, patients, portal, providers, referrals, screening
 
 app = FastAPI(title="Longitudinal Patient Record & Referral Exchange")
@@ -11,6 +12,7 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:3000",
+        *EXTRA_ORIGINS,
     ],
     allow_credentials=True,
     allow_methods=["*"],

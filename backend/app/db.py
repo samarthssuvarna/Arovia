@@ -1,7 +1,7 @@
 import psycopg
 from psycopg.rows import dict_row
 
-from .config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
+from .config import DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_SSLMODE, DB_USER
 
 
 def get_conn():
@@ -14,6 +14,7 @@ def get_conn():
         dbname=DB_NAME,
         user=DB_USER,
         password=DB_PASSWORD,
+        sslmode=DB_SSLMODE,
         row_factory=dict_row,
     )
     try:

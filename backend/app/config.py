@@ -11,6 +11,12 @@ DB_PORT = int(os.getenv("DB_PORT", "5432"))
 DB_NAME = os.getenv("DB_NAME", "recordsdb")
 DB_USER = os.getenv("DB_USER", "postgres")
 DB_PASSWORD = os.environ["DB_PASSWORD"]
+# Cloud databases (Neon, Supabase) need "require". Local PostgreSQL keeps the default.
+DB_SSLMODE = os.getenv("DB_SSLMODE", "prefer")
+
+# Extra website addresses allowed to call the API, comma separated
+# (for example the Vercel address after deployment).
+EXTRA_ORIGINS = [o.strip() for o in os.getenv("ALLOW_ORIGINS", "").split(",") if o.strip()]
 
 JWT_SECRET = os.environ["JWT_SECRET"]
 JWT_ALGORITHM = "HS256"
