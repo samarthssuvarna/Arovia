@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import EXTRA_ORIGINS
-from .routers import audit, auth, consents, dashboard, encounters, patients, portal, providers, referrals, screening
+from .routers import access, audit, auth, consents, dashboard, encounters, patients, portal, providers, referrals, screening
 
 app = FastAPI(title="Longitudinal Patient Record & Referral Exchange")
 
@@ -29,6 +29,7 @@ app.include_router(audit.router)
 app.include_router(dashboard.router)
 app.include_router(portal.router)
 app.include_router(screening.router)
+app.include_router(access.router)
 
 
 @app.middleware("http")

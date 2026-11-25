@@ -327,3 +327,22 @@ button.danger.solid:hover { background: var(--bad); filter: brightness(0.9); }
 }
 @keyframes toast-shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @media (prefers-reduced-motion: reduce) { .toast-bar, .confirm-bar { animation: none; } }
+
+/* ---------- record summary timeline (patient) ---------- */
+.tl-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.tl-head h3 { margin: 0; }
+.tl-head select { width: auto; min-width: 180px; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 4px; }
+.tl-item { position: relative; display: grid; grid-template-columns: 118px 1fr; gap: 14px; padding: 0 0 18px 22px; border-left: 2px solid var(--border); margin-left: 6px; }
+.tl-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+.tl-dot { position: absolute; left: -7px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--muted); border: 2px solid var(--card); }
+.tl-item.ok .tl-dot { background: var(--ok); }
+.tl-item.warn .tl-dot { background: var(--warn); }
+.tl-item.bad .tl-dot { background: var(--bad); }
+.tl-when { font-size: 14px; font-weight: 700; line-height: 1.35; }
+.tl-when span { display: block; font-weight: 400; color: var(--muted); font-size: 13px; }
+.tl-kind { font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.tl-title { font-weight: 700; }
+@media (max-width: 640px) {
+  .tl-item { grid-template-columns: 1fr; gap: 2px; }
+}

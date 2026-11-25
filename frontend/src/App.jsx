@@ -8,6 +8,8 @@ import Audit from './components/Audit.jsx'
 import Dashboard from './components/Dashboard.jsx'
 import PatientConsents from './components/PatientConsents.jsx'
 import PatientActivity from './components/PatientActivity.jsx'
+import MyPatients from './components/MyPatients.jsx'
+import PatientSummary from './components/PatientSummary.jsx'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -21,7 +23,7 @@ export default function App() {
       .catch(() => api('/auth/patient-me'))
       .then((me) => {
         setUser(me)
-        setTab(me.role === 'patient' ? 'consents' : 'home')
+        setTab(me.role === 'patient' ? 'summary' : 'home')
       })
       .catch(() => setToken(null))
       .finally(() => setBooting(false))
@@ -30,7 +32,7 @@ export default function App() {
   function handleLogin(token, me) {
     setToken(token)
     setUser(me)
-    setTab(me.role === 'patient' ? 'consents' : 'home')
+    setTab(me.role === 'patient' ? 'summary' : 'home')
   }
 
   function logout() {
@@ -44,10 +46,10 @@ export default function App() {
   const isAdmin = user.role === 'admin'
   const isPatient = user.role === 'patient'
   const tabs = isPatient
-    ? [['consents', 'Who can see my record'], ['activity', 'Who looked at it']]
+    ? [['summary', 'My record summary'], ['consents', 'Who can see my record'], ['activity', 'Who looked at it']]
     : isAdmin
     ? [['home', 'Home'], ['consents', 'Consent management'], ['audit', 'Audit log']]
-    : [['home', 'Home'], ['patients', 'Patients'], ['referrals', 'Referrals'], ['consents', 'My access']]
+    : [['home', 'Home'], ['patients', 'Patients'], ['mine', 'My patients'], ['referrals', 'Referrals'], ['consents', 'My access']]
 
   return (
     <>
@@ -75,9 +77,11 @@ export default function App() {
 
       <div className="page">
         {!isPatient && tab === 'home' && <Dashboard user={user} goTo={setTab} />}
+        {isPatient && tab === 'summary' && <PatientSummary />}
         {isPatient && tab === 'consents' && <PatientConsents />}
         {isPatient && tab === 'activity' && <PatientActivity />}
         {!isPatient && tab === 'patients' && <Patients user={user} />}
+        {!isPatient && !isAdmin && tab === 'mine' && <MyPatients />}
         {!isPatient && tab === 'referrals' && <Referrals user={user} />}
         {!isPatient && tab === 'consents' && <Consents user={user} />}
         {!isPatient && tab === 'audit' && <Audit />}
